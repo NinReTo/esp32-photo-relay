@@ -1,0 +1,30 @@
+# Проверяет, что прошивка компилируется для платы ESP32 Dev Module.
+name: Прошивка
+
+on:
+  push:
+    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+  pull_request:
+    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+
+permissions:
+  contents: read
+
+env:
+  ESP32_INDEX: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Установить ядро esp32
+        run: |
+          arduino-cli core update-index --additional-urls "$ESP32_INDEX"
+          arduino-cli core install esp32:esp32 --additional-urls "$ESP32_INDEX"
+
+      - name: Скомпилировать прошивку
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 --warnings default firmware/esp32_photo_relay

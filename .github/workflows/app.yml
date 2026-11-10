@@ -1,0 +1,53 @@
+# Проверяет, что приложение собирается и проходит тесты на Windows и Linux,
+# и прикладывает готовые программы к запуску (раздел Artifacts).
+name: Приложение
+
+on:
+  push:
+    paths: ["app/**", ".github/workflows/app.yml"]
+  pull_request:
+    paths: ["app/**", ".github/workflows/app.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            program: photo-relay-app.exe
+            artifact: photo-relay-app-windows
+          - os: ubuntu-latest
+            program: photo-relay-app
+            artifact: photo-relay-app-linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: app
+        # В bash шаг останавливается на первой же неудачной команде на обеих системах.
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Обновить Rust
+        run: rustup update stable && rustup default stable
+
+      - name: Проверка оформления и замечаний
+        run: |
+          cargo fmt --check
+          cargo clippy --all-targets -- -D warnings
+
+      - name: Тесты
+        run: cargo test
+
+      - name: Сборка
+        run: cargo build --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: app/target/release/${{ matrix.program }}
+          if-no-files-found: error
