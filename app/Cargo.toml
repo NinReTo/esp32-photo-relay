@@ -1,0 +1,16 @@
+[package]
+name = "photo-relay-app"
+version = "0.1.0"
+edition = "2024"
+description = "Оконное приложение для esp32-photo-relay: настройка платы и приём фото"
+license = "MIT"
+
+[dependencies]
+# Окно и элементы управления. Отрисовка через OpenGL (glow) — она легче и работает на старых ПК.
+eframe = { version = "0.37", default-features = false, features = ["clipboard", "default_fonts", "glow", "wayland", "x11"] }
+# Связь с платой по USB (последовательный порт). Без libudev, чтобы на Linux не нужны были лишние пакеты.
+serialport = { version = "4.10", default-features = false }
+
+[profile.release]
+opt-level = 2
+strip = true

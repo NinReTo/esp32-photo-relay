@@ -18,6 +18,9 @@ received/
 *.pdb
 *.ilk
 
+# Сборка приложения на Rust
+target/
+
 # Сборка Arduino
 build/
 *.bin
