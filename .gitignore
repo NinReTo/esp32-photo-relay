@@ -1,0 +1,37 @@
+# Собранный приёмник
+receiver/receiver
+receiver/receiver.exe
+
+# Принятые фото
+received/
+
+# Объектные файлы и прочие продукты сборки C
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.pdb
+*.ilk
+
+# Сборка Arduino
+build/
+*.bin
+*.elf
+*.hex
+*.map
+
+# Файлы сред разработки
+.vscode/
+.idea/
+.vs/
+*.swp
+*~
+
+# Системный мусор
+.DS_Store
+Thumbs.db
